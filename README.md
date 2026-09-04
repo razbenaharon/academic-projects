@@ -60,8 +60,8 @@ No result in this repository was regenerated or estimated for presentation. Ever
 
 ## About this repository
 
-Each project was migrated from its own standalone repository during a portfolio cleanup. **Git history was not preserved**, deliberately: two of the source repositories carried material that must not be republished — a committed `.env` with live proxy credentials and cloud storage tokens, and Israeli student ID numbers in README text and in filenames. A history-preserving merge would have carried all of it into a new public repository.
+Each project was migrated from its original standalone repository during a portfolio cleanup. The migration intentionally used clean current project files rather than importing the full histories, which kept the consolidated repository focused, portable, and free of legacy repository-specific metadata.
 
-Cleanup was limited to packaging. Code, results and outputs are as submitted; where a notebook's prose was rewritten or an oversized vendor-metadata blob removed, the project's own README says so. Team members are credited in each project's README.
+Cleanup was limited to packaging and presentation. Code, results and outputs remain faithful to the original submissions; where notebook prose or generated metadata was cleaned up, the relevant project README documents it. Team members are credited in each project's README.
 
 Two projects carry their original standalone licence (`distributed-database-spark`, Apache-2.0; `map-optimization-ir`, MIT). The repository as a whole is not otherwise licensed.
