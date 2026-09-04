@@ -16,7 +16,7 @@ import re
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
-from langchain.schema import HumanMessage, SystemMessage, BaseMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from utils.token_logger import count_tokens, log_tokens
 from utils.config import (
     AZURE_OPENAI_API_KEY,
