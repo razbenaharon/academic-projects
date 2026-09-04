@@ -1,0 +1,12 @@
+weights/
+deliverables/
+*.pt
+*.mp4
+runs/
+runs_sanity/
+datasets/
+reports/
+__pycache__/
+*.pyc
+venv/
+tmp/
