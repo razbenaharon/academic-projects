@@ -26,7 +26,7 @@ The numbers above are the easy part. These are the findings I would actually wan
 
 **Semi-supervised learning made the model worse where it mattered.** In [surgical tool detection](surgical-tool-detection/), pseudo-labelling lifted in-distribution validation (mAP@50-95 0.809 → 0.837) while *degrading* performance on the out-of-distribution video the system actually had to handle — classic confirmation bias, the model reinforcing its own errors. The supervised baseline was submitted as final. Choosing the model that scored lower on the visible metric was the whole exercise.
 
-**The metric dictated the strategy, not the other way round.** [Active learning](active-learning/) was graded on F1 for a minority class at a threshold the grader would not let us tune. Two consequences followed directly: only positives score, so hunting for them beat uncertainty sampling (+0.028); and with the threshold frozen, the only remaining lever on precision/recall was training composition — duplicating each positive once was worth +0.054, the single largest gain in the project.
+**The metric dictated the strategy, not the other way round.** [Active learning](active-learning/) was graded on F1 for a minority class at a threshold the grader would not let us tune. Two consequences followed directly: only positives score, so hunting for them beat equal-budget uncertainty sampling (+0.015); and with the threshold frozen, training composition became the remaining lever on precision/recall — duplicating each positive once improved F1 by +0.018 on the final labeled set.
 
 **A hybrid that actually diverges.** The [IR runs](map-optimization-ir/) were checked for whether the three submitted models rank differently at all, or merely look different. Any two share about three quarters of each query's results, and the hybrid is the *least* similar to the BM25 baseline it is built on.
 
@@ -49,14 +49,14 @@ Most of these depend on course-provided data that cannot be redistributed, and s
 | Project | Runs from a clone? |
 |---|---|
 | active-learning | With the course `data/` and `constants.yaml` in place |
-| surgical-tool-detection | Yes — weights are a release asset; see [`REPRODUCE.md`](surgical-tool-detection/REPRODUCE.md) |
+| surgical-tool-detection | Inference runs with the release weights; training needs the course data. See [`REPRODUCE.md`](surgical-tool-detection/REPRODUCE.md) |
 | wikipedia-hybrid-retrieval | Needs the Wikipedia corpus; `scripts/build_index.py` rebuilds the ~250 MB index |
 | map-optimization-ir | Results and method only — the Indri index and driver scripts were not part of the submission. `analyze_runs.py` runs on the committed run files |
 | match-point | No — Databricks `/dbfs` paths and a Llama serving endpoint |
 | distributed-database-spark | No — Databricks mounts and a course Kafka topic |
 | foodflow | With Azure OpenAI and Qdrant credentials in the environment |
 
-No result in this repository was regenerated or estimated for presentation. Every figure quoted comes from the original submission, and where a number was never recorded — the Wikipedia project's NDCG@10 — it is left unquoted rather than invented.
+Headline course metrics come from the original submissions and are not estimated. The post-submission IR run-overlap analysis is labeled as such in its project README. Where a number was never recorded — the Wikipedia project's NDCG@10 — it is left unquoted rather than invented.
 
 ## About this repository
 

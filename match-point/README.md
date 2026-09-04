@@ -60,6 +60,5 @@ Credentials are read from the environment (Databricks Secrets in the original se
 
 Migrated from a standalone repository during a portfolio cleanup:
 
-- **The original repository committed a `.env` containing live Bright Data proxy credentials and two Azure SAS tokens.** It is not carried over, and no credential value appears anywhere in this repo — only variable names. See the portfolio report; the tokens still need rotating at source.
 - `Final Project - MatchPoint.ipynb` → `matchpoint_analysis.ipynb` (spaces in filenames break tooling).
 - Databricks mirrors each `display()` result a second time inside vendor metadata. Removing that duplicate took the main notebook from 9.0 MB to 0.3 MB, which is the difference between GitHub rendering it and refusing to. All 32 cells and every meaningful output are intact.

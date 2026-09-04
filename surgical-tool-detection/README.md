@@ -2,7 +2,7 @@
 
 Object-detection system for surgical **hands and instruments** (classes:
 `Empty` = empty hand, `Tweezers`, `Needle_driver`) trained from a very small
-labeled set (~70 images) and generalized to **out-of-distribution (OOD)**
+labeled set (61 training images) and generalized to **out-of-distribution (OOD)**
 surgery video using **semi-supervised learning (SSL) with pseudo-labels**.
 
 Course: Computer Vision — Surgical Applications, HW1.
