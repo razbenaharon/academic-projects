@@ -1,0 +1,34 @@
+# Course-provided local development data — not our work, and not part of the
+# submission (the brief says submit only strategy.py and video_link.txt).
+# data/.pool_labels.pkl is the pool answer key and must not be redistributed.
+data/
+
+# Trained model artifacts produced by evaluation.py
+.eval_cache/
+*.joblib
+best_model.pt
+
+# Local self-evaluation config — the brief says do not submit constants.yaml.
+# Kept out of the repo so the staff copy is always the source of truth.
+constants.yaml
+
+# Course-authored brief and its text dump. Not our work, not part of the
+# submission, and both carry a staff member's email address — which does not
+# belong in a public repo. README.md restates the task instead.
+Project B*.pdf
+Project_B_context.md
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS / editor
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Rendered QA images
+presentation/render/
