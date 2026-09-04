@@ -1,6 +1,38 @@
-# FoodFlow – Developer Guide & Runbook
+# FoodFlow — Multi-Agent Decisions for Restaurant Food Surplus
 
-FoodFlow simulates day-to-day operations for a restaurant (**HaSalon, Tel Aviv**), deciding **what to cook, sell, or donate** from inventory and expiring items. It is built from modular “agents”.
+**Course:** Technion — final project
+
+Restaurants throw away food that is still good, because the decision of what to
+do with an expiring ingredient is made under time pressure with incomplete
+information. Cooking it needs a recipe that uses what is actually in stock;
+selling it needs a nearby restaurant that wants it; donating it needs a
+reachable collection point. Nobody checks all three per ingredient, so the
+default is waste.
+
+FoodFlow simulates a day of operations for a restaurant (**HaSalon, Tel Aviv**)
+and decides **COOK / SELL / DONATE** per expiring ingredient, using six
+cooperating LLM agents:
+
+| Agent | Responsibility |
+|---|---|
+| `recipe_agent` | Semantic search over a Qdrant recipe index for dishes matching the expiring stock |
+| `restaurant_agent` | Ranks nearby restaurants by how likely they are to buy the surplus |
+| `soup_kitchen_finder` | Finds reachable donation points, by distance |
+| `decision_agent` | Weighs those three options and commits to one action per ingredient |
+| `execution_agent` | Writes the outgoing messages — to the kitchen, the buyer, the collection point |
+| `feedback_agent` | Reads the rolling history of what kept expiring and suggests buying less of it |
+
+The feedback loop is the part worth pointing at: acting on today's surplus is
+triage, but an ingredient that expires every week is a *procurement* problem,
+and only the rolling history shows it.
+
+Token usage for every chat and embedding call is logged to `tokens_count/`,
+because an agent system that quietly costs more than the food it saves has not
+solved anything. Sample end-to-end runs are in `examples/`.
+
+---
+
+## Developer Guide & Runbook
 
 ---
 
