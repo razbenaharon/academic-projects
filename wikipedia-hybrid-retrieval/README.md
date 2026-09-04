@@ -1,11 +1,30 @@
-# Section B - Wikipedia Retrieval
+# Wikipedia Hybrid Retrieval
+
+**Course:** Technion — Section B · **Individual project**
+
+Answer natural-language questions over a Wikipedia corpus by returning ranked `page_id`s, scored on **NDCG@10**. The interesting constraint is that query time is measured: the index is built offline, and the timed stage only embeds the query and ranks.
+
+The ranker is a **hybrid** — dense semantic similarity plus three lexical signals, combined with tuned weights:
+
+| Signal | Weight | Why it earns its place |
+|---|---|---|
+| MiniLM semantic similarity | 0.60 | Handles paraphrase, where the question shares no vocabulary with the article |
+| BM25 over the article **lead** | 0.30 | A Wikipedia lead states what the page *is*; scoring it separately beats scoring the whole body, which dilutes the signal across a long article |
+| Query-term coverage | 0.10 | A cheap guard against a semantically plausible page that omits a key entity outright |
+
+Full-article BM25, title overlap, popularity, pseudo-relevance feedback and proximity scoring are all implemented and **switched off** — they scored worse on the public queries than the three above. They are left in `retrieve.py` rather than deleted, because the fact that they did not help is part of the result.
+
+> **Reproducibility.** Two things this repository cannot ship: the `data/Wikipedia Entries/` corpus, which is course-provided and not redistributable, and `artifacts/`, roughly 250 MB of prebuilt index tensors that `scripts/build_index.py` regenerates from the corpus. The 29 public queries with their relevance judgements *are* included, in `data/public_queries.json`. With the corpus in place, `python scripts/build_index.py && python scripts/eval_public.py` reproduces the evaluation end to end.
+>
+> No NDCG@10 figure is quoted here because none was recorded at submission time, and inventing one is not an option. `scripts/eval_public.py` prints it for anyone with the corpus.
+
+---
 
 Video presentation: [Google Drive](https://drive.google.com/file/d/1OTeE8505G-K7uFsKdHm5gg1vetxAvULA/view?usp=sharing)
 
-This is my solution for Section B. The program gets a list of search queries and
-returns Wikipedia `page_id` results for each query. The grader only checks the
-top 10 results, so the main goal was to get good `NDCG@10` while keeping the
-query time reasonable.
+The program takes a list of search queries and returns Wikipedia `page_id`
+results for each. The grader only checks the top 10, so the goal was NDCG@10
+with a query time that stayed reasonable.
 
 ## How the Project Works
 
@@ -102,7 +121,7 @@ eval.py                 NDCG@10 evaluation code
 tune_hyperparameters.py offline tuning script
 scripts/build_index.py  rebuilds artifacts
 scripts/eval_public.py  evaluates public queries
-artifacts/              saved index files
+artifacts/              saved index files (not committed - rebuild with scripts/build_index.py)
 data/                   queries and Wikipedia entries
 ```
 

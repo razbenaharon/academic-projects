@@ -11,7 +11,7 @@ unique queries, well inside the 60s-per-seed cap.
 |---|---|
 | **Team** | Raz Ben Aharon · Lior Malachi |
 | **Deadline** | 23 July 2026, 22:55 |
-| **Submitted for Section A** | `strategy.py` + `video_link.txt` only |
+| **Submitted for Section A** | `strategy.py` + a video link only |
 
 ## The short version
 
@@ -48,7 +48,6 @@ Where the score comes from:
 | `experiments/plot_data.json` | Raw measurements behind the deck. |
 | `experiments/experiment_lab.py` | The sweep harness. Not submitted. |
 | `utils.py`, `run.py`, `evaluation.py` | Course-provided framework. Unmodified. |
-| `video_link.txt` | **Placeholder — paste the real URL before submitting.** |
 
 `data/` and `constants.yaml` are deliberately **not** in this repo. They are course-provided,
 they are not part of the submission, and `data/.pool_labels.pkl` is the pool answer key.

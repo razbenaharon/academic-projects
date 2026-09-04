@@ -49,6 +49,13 @@ pip install -r requirements.txt
 
 Download the final trained weights and place them at `weights/best.pt`:
 
+> **Where the large artifacts live.** The trained weights and the annotated
+> output video are GitHub Release assets on the original standalone
+> repository, `razbenaharon/surgical-tool-detection-ssl`. That repository is
+> archived - read-only, but its releases stay publicly downloadable, so the
+> links below keep working. They are not committed here: 19 MB of weights and
+> 135 MB of video do not belong in a monorepo.
+
 > **Weights download:** [best.pt (GitHub Release)](https://github.com/razbenaharon/surgical-tool-detection-ssl/releases/download/v1.0/best.pt)
 
 ## Submission artifacts
