@@ -61,7 +61,7 @@ solved anything. Sample end-to-end runs are in `examples/`.
 │  └─ top_restaurants.json          # Ranked restaurants most likely to buy surplus
 │
 ├─ examples/                        # Example run logs
-│  ├─ example1.txt … example6.txt
+│  ├─ example1.txt … example5.txt
 │
 ├─ tokens_count/                    # Token usage logs
 │  ├─ chat_tokens.txt
@@ -168,7 +168,7 @@ solved anything. Sample end-to-end runs are in `examples/`.
 
 ## Examples
 
-The `examples/` folder contains logs (`example1.txt` … `example6.txt`) showing full runs:  
+The `examples/` folder contains logs (`example1.txt` … `example5.txt`) showing full runs:  
 - inventory state  
 - chosen soup kitchen  
 - matched recipes & restaurants  
