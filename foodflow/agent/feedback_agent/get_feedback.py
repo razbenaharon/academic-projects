@@ -3,7 +3,7 @@ import json
 import shutil
 from datetime import datetime
 from utils.chat_and_embedding import LLMChat
-from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, \
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, \
     PromptTemplate
 
 # The number of past runs (data points) required to trigger the feedback agent.
