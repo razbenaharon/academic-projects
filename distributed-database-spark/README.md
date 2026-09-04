@@ -1,82 +1,65 @@
-# 📌 Distributed Database Management - Spark  
+# Household Segmentation on Set-Top-Box Viewing Data
 
-This project focuses on **data preprocessing, dimensionality reduction, clustering, and real-time streaming analysis** using **Apache Spark**.  
-The goal is to segment households based on viewing habits and derive meaningful insights from large-scale demographic data.  
+**Course:** Distributed Database Management, Technion — Project 2 · **Team:** Raz Ben Aharon · Lior Malachi
 
----
-
-## 🔹 Key Components  
-
-### **1️⃣ Data Preprocessing**  
-✅ **Normalized numerical variables** and applied **one-hot encoding** to categorical variables.  
-🔹 Ensures **fair comparison** between features and prevents misinterpretation of categorical data.  
-🔹 Crucial for **accurate modeling and analysis**, especially with diverse demographic datasets.  
+Segment television households from demographics, then characterise each segment by what it actually watches — first as a batch job over Parquet, then as a continuously updated view over a Kafka stream.
 
 ---
 
-### **2️⃣ Dimensionality Reduction**  
-✅ Used **Singular Value Decomposition (SVD)** to project feature vectors onto a **2D space**.  
-🔹 Revealed **principal components** with the largest singular values, capturing **maximum variance**.  
-🔹 Helped identify **three main clusters**, providing **initial insights into household groupings**.  
+## Problem
 
----
+A provider holds two large tables: household demographics, and a log of what every set-top box watched. Separately, neither is worth much. The useful question sits across the join — *which kinds of household watch which kinds of content* — and the answer has to survive being computed on a stream, because both segment membership and viewing habits drift.
 
-### **3️⃣ Clustering**  
-✅ Applied **K-means clustering** with **8 clusters**.  
-🔹 Allowed for targeted analysis of **household characteristics and viewing habits**.  
-🔹 The choice of **8 clusters** was an **initial approach**, with further evaluation planned.  
+## Data
 
----
+Two Parquet tables from the FWM set-top-box dataset:
 
-### **4️⃣ Visualization of Clusters**  
-✅ Used **PCA for 2D reduction** and created a **color-coded scatter plot**.  
-🔹 Revealed **varying levels of cluster overlap**, indicating possible **cluster refinements**.  
-🔹 Identified that **reducing to 6 clusters** might provide **more distinct groupings**,  
-   demonstrating an analytical approach to methodology improvement.  
+| Table | Grain |
+|---|---|
+| `Project2_demographic.parquet` | one row per household — income, size, age bands, region, other categorical attributes |
+| `Project2_static_viewing_data.parquet` | one row per viewing event — household, station, programme, timing |
 
----
+## Method
 
-### **5️⃣ Viewing Analysis**  
-✅ Calculated **'diff rank'** for stations in each cluster/subset.  
+```text
+demographics ──▶ encode + normalise ──▶ SVD / PCA to 2-D ──▶ K-Means (k = 8)
+                                                                   │
+                                        ┌──────────────────────────┤
+                                        ▼                          ▼
+                        distance-stratified subsets      join to viewing log
+                                                                   │
+                                                                   ▼
+                                                    per-cluster station profiles
+                                                                   │
+Kafka topic ──▶ Structured Streaming ──▶ windowed aggregation ─────┘
+```
 
-🔹 **Purpose**: Measures how **viewing preferences in each cluster differ** from the general population.  
+**Encoding is not a formality here.** K-Means minimises Euclidean distance, so two things had to be true before clustering could mean anything: numerical attributes are normalised, or one wide-range column dominates the objective through its units alone; and categoricals are one-hot encoded rather than integer-indexed, or the model infers an ordering ("region 3 lies between region 2 and region 4") that does not exist.
 
-🔹 **Findings**:  
-   - 'Diff rank' values were generally **low (below 0.8)**, indicating **no strong preferences**  
-     for particular stations across clusters.  
-   - Suggests that household **viewing patterns may be more uniform** than initially expected.  
+**SVD before choosing `k`.** Projecting to two dimensions first showed three visible groupings — evidence that the households separate at all, rather than an assumption that they do. Clustering ran afterwards, and the same projection coloured by assignment is the check that the eight clusters are structure and not arbitrary slices of one cloud.
 
----
+**Stratified subsets.** Each household carries its Euclidean distance from its own centroid — how typical it is of its segment. Households are ranked by that distance *within* cluster, then sampled every 7th and every 11th row. Ranking within cluster keeps each subset proportional to its cluster and spanning typical-to-atypical, which uniform sampling over the whole table would not guarantee; the two coprime strides give subsets that collide only every 77th row.
 
-### **6️⃣ Streaming Analysis**  
-✅ Used **Spark Streaming** to process **real-time viewing data from Kafka**.  
-🔹 **Demonstrates real-time data processing**, crucial for **keeping recommendations current**.  
+**Profiles as percentages.** Per-cluster station counts are normalised by the cluster's own total viewing. Raw counts would just rediscover which cluster is biggest.
 
-🔹 **Findings**:  
-   - **High similarity in Top-10 stations** across different time triggers.  
-   - Suggests **consistent viewing patterns** within clusters over time.  
+**Streaming.** The same pipeline over Spark Structured Streaming against a Kafka topic, with an explicit event schema and windowed aggregation. The point is not throughput — it is that a nightly batch cannot show drift while it is happening.
 
----
+## Contents
 
-## 📊 Key Insights & Observations  
+```text
+spark_household_segmentation.ipynb   the analysis (Databricks/PySpark)
+report.pdf                           written answers and discussion
+assignment_brief.pdf                 the original course brief
+```
 
-🔹 **Cluster Consistency**  
-   - **High similarity in results** across different subset types indicates **stable viewing preferences**  
-     as data volume increases.  
+## Reproducibility
 
-🔹 **Decreasing 'Diff Rank' Over Time**  
-   - Observed a **gradual decline** in 'diff rank' across triggers.  
-   - Suggests that **cluster-specific viewing habits** were converging toward general population trends.  
+**This notebook does not run outside Databricks.** It reads from `/dbfs` course mounts, uses Databricks `display()`, and connects to a course Kafka topic. None of those are public, and the dataset is not redistributable. It is preserved as a record of the work, with its outputs intact, rather than as a runnable project — `report.pdf` carries the written analysis.
 
-🔹 **Visualization Strategy**  
-   - Implemented **multi-panel visualizations** for **efficient data analysis**.  
-   - Demonstrates the ability to **present complex data clearly and meaningfully**.  
+## Notes on this copy
 
----
+Migrated from a standalone repository during a portfolio cleanup. Three changes, none touching the analysis:
 
-## 🚀 Tech Stack  
-🔹 **Apache Spark (PySpark)** – Big Data Processing  
-🔹 **Kafka** – Real-Time Streaming  
-🔹 **Pandas & NumPy** – Data Preprocessing  
-🔹 **Matplotlib & Seaborn** – Visualization  
-🔹 **K-Means, SVD, PCA** – Machine Learning  
+- Files renamed to drop student ID numbers from their names.
+- The markdown cells were rewritten to explain the reasoning; every code cell and all 61 outputs are unchanged.
+- Databricks mirrors each `display()` result a second time inside vendor metadata. That duplicate — 1.3 MB — was removed so GitHub renders the notebook.
