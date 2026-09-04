@@ -16,9 +16,9 @@ from typing import Dict, List, Set, Tuple, Any, Optional
 
 # Import the LLM chat utility (same as used in find_restaurant.py)
 from utils.chat_and_embedding import LLMChat
-from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, \
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, \
     PromptTemplate
-from langchain_core.messages import HumanMessage  # ✅ Use LangChain message type
+from langchain_core.messages import HumanMessage
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

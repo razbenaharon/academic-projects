@@ -56,6 +56,7 @@ Drop the course's `Section A/student/` copies of both in place to run anything h
 ## Reproducing
 
 ```bash
+pip install -r requirements.txt
 python evaluation.py                    # official self-eval, prints per-seed F1
 python experiments/make_plot_data.py    # regenerates plot_data.json
 ```
