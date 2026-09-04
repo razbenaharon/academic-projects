@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# Generated indexes and model artifacts.
+# wikipedia-hybrid-retrieval/artifacts/ is ~250 MB of prebuilt index tensors;
+# rebuild with `python scripts/build_index.py` rather than committing them.
+wikipedia-hybrid-retrieval/artifacts/
+*.npy
+*.pt
+*.pth
+
+# FoodFlow run outputs (the agents rewrite these on every run)
+foodflow/results/*
+!foodflow/results/.gitkeep
+foodflow/data/current_inventory.json
+foodflow/data/expiring_ingredients.json
+foodflow/data/recent_expiring_ingredients.json
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
