@@ -1,6 +1,6 @@
 # Core LLM + LangChain
 openai
-langchain
+langchain-core
 langchain-openai
 langchain_community
 

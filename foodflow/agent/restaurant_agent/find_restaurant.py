@@ -2,7 +2,7 @@ import json
 import csv
 import os
 from utils.chat_and_embedding import LLMChat
-from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, PromptTemplate, SystemMessagePromptTemplate
 import random
 
 
