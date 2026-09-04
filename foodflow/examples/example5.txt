@@ -1,0 +1,157 @@
+👋 Welcome to FoodFlow!
+You are now simulating operations for 'HaSalon' restaurant in Tel Aviv, owned by chef Eyal Shani.
+Our goal is to make smart, sustainable decisions about what to cook, sell, or donate among expiring ingredients.
+
+For each expiring ingredient, the agent will determine the most suitable action:
+- 🍽️ Cook: A message will be sent to the chef with today’s special based on this ingredient.
+- 🍴 Sell: A message will be sent to a nearby restaurant most likely to purchase it.
+- ❤️ Donate: A pickup will be scheduled with a nearby donation center.
+
+===========================================================================
+
+Press Enter to see the magic happen...
+
+===========================================================================
+
+📦 Current Inventory (excluding expiring):
+- Eggplant: 12 unit
+- Olive oil: 1500 ml
+- Sea salt: 500 grams
+- Parsley: 100 grams
+- Heirloom tomatoes: 10 unit
+- Garlic: 20 cloves
+- Black pepper: 300 grams
+- Lamb chops: 2 kg
+- Freekeh: 2 kg
+- Mint: 100 grams
+- Shrimp: 2.5 kg
+- Chili: 10 unit
+- White wine: 2 liters
+- Cream: 2 liters
+- Cauliflower: 6 unit
+- Lemon zest: 5 unit
+- Lemon: 10 unit
+- Artichoke: 6 unit
+- Zucchini: 8 unit
+- Yogurt: 500 grams
+- Duck breast: 1.5 kg
+- Rosemary: 50 grams
+- Honey: 300 grams
+- Leeks: 6 stalk
+- Dill: 50 grams
+- Beets: 5 unit
+- Labneh: 500 grams
+- Parmesan cheese: 500 grams
+- Water: unlimited unit
+- Salt: unlimited unit
+
+⏳ Expiring Ingredients:
+- Mushrooms: 0.78 kg (Expires in 4 days)
+- Sea bass: 2.04 fillet (Expires in 4 days)
+- Crushed tomato: 0.39 kg (Expires in 2 days)
+- Butter: 0.35 kg (Expires in 2 days)
+- Basil: 31.45 grams (Expires in 2 days)
+
+===========================================================================
+
+🥣 choosing soup kitchen for today...
+
+Best matching soup kitchen:
+Name: בית מעשים טובים
+Address: Zeev Jabotinsky St 106, Ramat Gan
+Distance: 3.25 km
+
+===========================================================================
+
+🧑‍🍳 Running recipe recommendation agent...
+Recipe agent       [██████████████████████████████] 100%
+
+Best matching recipes:
+1. Charred Eggplant with Mushroom-Basil Butter and Crushed Tomato Drizzle
+   Matched expiring ingredients: Mushrooms, Basil, Butter, Crushed tomato
+   Inventory ingredients: Eggplant
+   Missing ingredients: none
+   Reason: The charred eggplant with mushroom-basil butter and crushed tomato drizzle highlights HaSalon's produce-driven Israeli Mediterranean ethos and uses expiring mushrooms and basil.
+2. Mediterranean Sea Bass with Freekeh Pilaf and Lemon-Basil Sauce
+   Matched expiring ingredients: Sea bass, Basil, Butter
+   Inventory ingredients: Freekeh, Lemon
+   Missing ingredients: none
+   Reason: The Mediterranean Sea Bass with Freekeh Pilaf and Lemon-Basil Sauce highlights HaSalon's produce-driven ethos, utilizing fresh sea bass and basil.
+3. Lamb Chops with Cauliflower Purée and Chili-Honey Glaze
+   Matched expiring ingredients: Butter
+   Inventory ingredients: Lamb chops, Cauliflower, Cream, Chili, Honey, Black pepper, Salt
+   Missing ingredients: none
+   Reason: Lamb Chops with Cauliflower Purée and Chili-Honey Glaze embodies HaSalon's bold Israeli Mediterranean flavors, while utilizing butter to enhance richness.
+
+===========================================================================
+
+🍽️ Running restaurant recommendation agent...
+
+Best matching restaurants:
+1. Fish Market by Meatos
+   Matched ingredients: Sea bass
+   Reason: Specializes in seafood, making sea bass a perfect match. Located 1.16km away and likely to use fresh fish.
+2. Zota Pizza
+   Matched ingredients: Crushed tomato, Basil, Butter
+   Reason: Italian-style pizzeria where crushed tomato, basil, and butter are essential ingredients. Very close (0.78km).
+3. Shtsupak
+   Matched ingredients: Sea bass, Butter
+   Reason: Seafood-focused restaurant that can use sea bass and butter in their dishes. Close by (1.2km) and a good fit.
+
+===========================================================================
+
+🧠 Running decision agent...
+Sending request to LLM...
+Received response from LLM
+
+--- Final Decision Summary ---
+COOK   (4 items):  Mushrooms, Basil, Butter, Crushed tomato
+  ↳ Recipe: Charred Eggplant with Mushroom-Basil Butter and Crushed Tomato Drizzle
+  🧾 Reason (COOK): Highest coverage of expiring ingredients
+SELL   (1 items):  Sea bass
+  ↳ Restaurant: Fish Market by Meatos
+  🧾 Reason (SELL): High demand and stable to transport
+DONATE (0 items):  none
+  ↳ Donation Center: בית מעשים טובים
+  🧾 Reason (DONATE): No remaining expiring items to donate
+----------------------------
+
+===========================================================================
+
+🧑‍🍳 Sending selected recipe to kitchen...
+
+================= SEND TO KITCHEN =================
+👨‍🍳  Recipe: Charred Eggplant with Mushroom-Basil Butter and Crushed Tomato Drizzle
+---------------------------------------------------
+🧺  Ingredients:
+  • Mushrooms
+  • Basil
+  • Butter
+  • Crushed tomato
+  • Eggplant
+---------------------------------------------------
+🧾  Chef Notes / Reason:
+  The charred eggplant with mushroom-basil butter and crushed tomato drizzle highlights HaSalon's produce-driven Israeli Mediterranean ethos and uses expiring mushrooms and basil.
+===================================================
+
+
+===========================================================================
+
+✉️ Preparing outbound messages...
+
+====== Message to restaurant ======
+ Hi from HaSalon! We have some high-quality surplus ingredients available today and thought you might be interested:
+
+- **Sea bass**: 2.04kg fillet (expires in 4 days) – ₪95/kg = **₪193.80**
+
+**Bundled offer**: Take it all for **₪180**!
+Pickup available today between 14:00-18:00. Please contact us at **052-1234567** to confirm.
+
+Looking forward to hearing from you!
+
+===========================================================================
+
+📊 Checking if feedback agent should run -- asking for feedback only each 10 iterations of the agent...
+ℹ️ Only 1 runs found. Need 10 to activate feedback agent.
+
+✅ Simulation complete.
