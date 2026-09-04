@@ -1,0 +1,17 @@
+# Core LLM + LangChain
+openai
+langchain
+langchain-openai
+langchain_community
+
+# Vector DB
+qdrant-client
+
+# Utilities
+python-dotenv
+tqdm
+tiktoken
+jinja2
+requests
+pandas
+geopy

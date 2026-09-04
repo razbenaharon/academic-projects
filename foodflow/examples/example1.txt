@@ -1,0 +1,154 @@
+👋 Welcome to FoodFlow!
+You are now simulating operations for 'HaSalon' restaurant in Tel Aviv, owned by chef Eyal Shani.
+Our goal is to make smart, sustainable decisions about what to cook, sell, or donate among expiring ingredients.
+
+For each expiring ingredient, the agent will determine the most suitable action:
+- 🍽️ Cook: A message will be sent to the chef with today’s special based on this ingredient.
+- 🍴 Sell: A message will be sent to a nearby restaurant most likely to purchase it.
+- ❤️ Donate: A pickup will be scheduled with a nearby donation center.
+
+===========================================================================
+
+Press Enter to see the magic happen...
+
+===========================================================================
+
+📦 Current Inventory (excluding expiring):
+- Sea salt: 500 grams
+- Parsley: 100 grams
+- Heirloom tomatoes: 10 unit
+- Garlic: 20 cloves
+- Basil: 50 grams
+- Black pepper: 300 grams
+- Lamb chops: 2 kg
+- Freekeh: 2 kg
+- Mint: 100 grams
+- Shrimp: 2.5 kg
+- Crushed tomato: 1.2 kg
+- Chili: 10 unit
+- Cream: 2 liters
+- Cauliflower: 6 unit
+- Lemon: 10 unit
+- Artichoke: 6 unit
+- Zucchini: 8 unit
+- Yogurt: 500 grams
+- Duck breast: 1.5 kg
+- Rosemary: 50 grams
+- Honey: 300 grams
+- Sea bass: 5 fillet
+- Leeks: 6 stalk
+- Dill: 50 grams
+- Beets: 5 unit
+- Labneh: 500 grams
+- Mushrooms: 1 kg
+- Water: unlimited unit
+- Salt: unlimited unit
+
+⏳ Expiring Ingredients:
+- Olive oil: 659.68 ml (Expires in 2 days)
+- Parmesan cheese: 182.18 grams (Expires in 3 days)
+- Eggplant: 4.18 unit (Expires in 2 days)
+- Butter: 0.49 kg (Expires in 1 days)
+- Lemon zest: 2.07 unit (Expires in 2 days)
+- White wine: 0.64 liters (Expires in 2 days)
+
+===========================================================================
+
+🥣 choosing soup kitchen for today...
+
+Best matching soup kitchen:
+Name: אוכל לנזקקים
+Address: 4, Namal Tel Aviv, Tel Aviv-Yafo
+Distance: 1.27 km
+
+===========================================================================
+
+🧑‍🍳 Running recipe recommendation agent...
+Recipe agent       [██████████████████████████████] 100%
+
+Best matching recipes:
+1. Charred Eggplant with Lemon-Parmesan Butter and Herb Gremolata
+   Matched expiring ingredients: Olive oil, Parmesan cheese, Eggplant, Butter, Lemon zest, White wine
+   Inventory ingredients: Sea salt, Parsley, Garlic, Black pepper, Lemon
+   Missing ingredients: none
+   Reason: The charred eggplant highlights Israeli Mediterranean flavors, while the lemon-Parmesan butter elevates HaSalon's produce-driven, live fire cooking philosophy.
+2. Freekeh Risotto with Artichokes, Mushrooms, and White Wine
+   Matched expiring ingredients: Olive oil, Parmesan cheese, Butter, Lemon zest, White wine
+   Inventory ingredients: Freekeh, Artichoke, Mushrooms, Garlic, Sea salt, Black pepper
+   Missing ingredients: none
+   Reason: The Freekeh Risotto with Artichokes, Mushrooms, and White Wine embodies HaSalon's Mediterranean ethos, elevated by expiring Parmesan and butter for richness.
+3. Grilled Sea Bass with Cauliflower Purée and Chili-Lemon Sauce
+   Matched expiring ingredients: Olive oil, Butter, Lemon zest, White wine
+   Inventory ingredients: Sea bass, Cauliflower, Chili, Lemon, Salt
+   Missing ingredients: Shallots
+   Reason: Grilled Sea Bass with Cauliflower Purée and Chili-Lemon Sauce embodies HaSalon's Mediterranean ethos, utilizing fresh produce, olive oil, and vibrant flavors.
+
+===========================================================================
+
+🍽️ Running restaurant recommendation agent...
+
+Best matching restaurants:
+1. Panama Pizza
+   Matched ingredients: Olive oil, Parmesan cheese, Butter
+   Reason: Pizza restaurant that can use olive oil, Parmesan cheese, and butter in their dishes. Located very close (0.86km).
+2. Market Vegan Restaurant
+   Matched ingredients: Eggplant, Olive oil, Lemon zest
+   Reason: Vegan restaurant likely to use eggplant, olive oil, and lemon zest in their plant-based dishes. Just 0.89km away.
+3. Hummus Eben Gvirol
+   Matched ingredients: Olive oil, Lemon zest
+   Reason: Middle Eastern restaurant where olive oil and lemon zest are commonly used. Extremely close (0.37km).
+
+===========================================================================
+
+🧠 Running decision agent...
+Sending request to LLM...
+Received response from LLM
+
+--- Final Decision Summary ---
+COOK   (6 items):  Olive oil, Parmesan cheese, Eggplant, Butter, Lemon zest, White wine
+  ↳ Recipe: Charred Eggplant with Lemon-Parmesan Butter and Herb Gremolata
+  🧾 Reason (COOK): Highest coverage of expiring ingredients.
+SELL   (0 items):  none
+  ↳ Restaurant: Panama Pizza
+  🧾 Reason (SELL): No remaining items suitable for selling.
+DONATE (0 items):  none
+  ↳ Donation Center: אוכל לנזקקים
+  🧾 Reason (DONATE): No remaining items suitable for donation.
+----------------------------
+
+===========================================================================
+
+🧑‍🍳 Sending selected recipe to kitchen...
+
+================= SEND TO KITCHEN =================
+👨‍🍳  Recipe: Charred Eggplant with Lemon-Parmesan Butter and Herb Gremolata
+---------------------------------------------------
+🧺  Ingredients:
+  • Olive oil
+  • Parmesan cheese
+  • Eggplant
+  • Butter
+  • Lemon zest
+  • White wine
+  • Sea salt
+  • Parsley
+  • Garlic
+  • Black pepper
+  • Lemon
+---------------------------------------------------
+🧾  Chef Notes / Reason:
+  The charred eggplant highlights Israeli Mediterranean flavors, while the lemon-Parmesan butter elevates HaSalon's produce-driven, live fire cooking philosophy.
+===================================================
+
+
+===========================================================================
+
+✉️ Preparing outbound messages...
+No messages generated.
+
+===========================================================================
+
+📊 Checking if feedback agent should run -- asking for feedback only each 10 iterations of the agent...
+ℹ️ Only 6 runs found. Need 10 to activate feedback agent.
+
+✅ Simulation complete.
