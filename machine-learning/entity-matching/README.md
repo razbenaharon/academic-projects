@@ -15,3 +15,8 @@ Python with numpy, pandas and scikit-learn. Supply the course `tableA.csv`, `tab
 The source docstring reports repeated-CV comparisons; they were not rerun in this migration. Avoid presenting them as an independent held-out benchmark. Source scripts read local pickle inputs: use only trusted course artifacts.
 
 Imported coursework outputs and personal submission metadata have been removed from the public copy. The original OneDrive materials were not edited.
+
+Experiment helpers use `ENTITY_MATCHING_DATA_DIR` (default: current directory) to locate
+course data and write experiment outputs. For example in PowerShell:
+`$env:ENTITY_MATCHING_DATA_DIR = 'D:/datasets/entity-matching'`.
+`solution.py` still reads its inputs from the working directory.

@@ -11,6 +11,11 @@ import argparse
 import json
 import time
 import warnings
+import sys
+from pathlib import Path
+
+# Direct script execution puts experiments/, not its parent, on sys.path.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
 from sklearn.cluster import KMeans

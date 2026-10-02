@@ -4,3 +4,5 @@ scikit-learn
 torch
 networkx
 pytest
+scipy
+PyYAML

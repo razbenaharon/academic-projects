@@ -21,6 +21,8 @@ to solution.py's.
 """
 import re
 import pickle
+import os
+from pathlib import Path
 from collections import defaultdict
 
 import numpy as np
@@ -31,7 +33,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import KFold
 
-BASE = "c:/Users/User/OneDrive - Technion/Python/mini-hackaton/"
+BASE = str(Path(os.environ.get("ENTITY_MATCHING_DATA_DIR", "."))) + os.sep
 KA, KB = 10, 8
 BUDGET = 2000
 

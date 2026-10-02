@@ -174,8 +174,8 @@ class BooleanRetrieval:
 
 if __name__ == "__main__":
 
-    #path_to_AP_collection = 'C:/Users/User/Desktop/PythonIR/data'
-    #path_to_boolean_queries = 'C:/Users/User/Desktop/PythonIR/BooleanQueries.txt'
+    #path_to_AP_collection = './data'
+    #path_to_boolean_queries = './BooleanQueries.txt'
 
     path_to_AP_collection = '/data/HW1/AP_Coll_Parsed'
     path_to_boolean_queries = '/data/HW1/BooleanQueries.txt'

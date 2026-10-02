@@ -18,6 +18,7 @@ SECRET = re.compile(
     r"sk-(?:proj-)?[A-Za-z0-9_-]{32,}|AKIA[A-Z0-9]{16}|"
     r"AIza[A-Za-z0-9_-]{30,}|-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----"
 )
+USER_PATH = re.compile(r"(?i)\b[a-z]:[\\/]+users[\\/]+[^\\/\s\"']+")
 
 
 def valid_id(s):
@@ -31,6 +32,7 @@ def inspect_text(name, text, problems):
     for kind, found in [
         ("possible personal identifier", any(valid_id(m.group()) for m in ID.finditer(text))),
         ("credential-shaped text", bool(SECRET.search(text))),
+        ("local Windows user path", bool(USER_PATH.search(text))),
     ]:
         if found:
             problems.append((name, kind))

@@ -75,7 +75,7 @@ def combine_rm3(p_w_Q, p_w_R, lam=0.5):
 
 # Load collection statistics
 cf_dict, total_terms_corpus = parse_collection_stats("/data/HW3/gov2_collection_stats.csv")
-#cf_dict, total_terms_corpus = parse_collection_stats("C:/Users/User/Desktop/IR3/gov2_collection_stats.csv")
+#cf_dict, total_terms_corpus = parse_collection_stats("./gov2_collection_stats.csv")
 # Load original queries (tokenized and stemmed)
 queries_tfs, queries_len = parse_documents_or_queries("q_stemmed.tsv")
 
@@ -88,7 +88,7 @@ for qid, q_tf in queries_tfs.items():
 
     # Load feedback documents for this query
     docs_tfs, docs_len = parse_documents_or_queries(f"/home/student/HW3/feedback_docs/{qid}.tsv")
-    #docs_tfs, docs_len = parse_documents_or_queries(f"C:/Users/User/Desktop/IR3/feedback_docs/{qid}.tsv")
+    #docs_tfs, docs_len = parse_documents_or_queries(f"./feedback_docs/{qid}.tsv")
 
     # Compute p(w|R) using Dirichlet smoothing
     d = dict(q_tf.items())

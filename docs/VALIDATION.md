@@ -5,7 +5,7 @@ not a claim that every project runs on a fresh laptop.
 
 ## Completed checks
 
-- Seventeen deterministic local regression cases pass (`python -m pytest tests -q`).
+- Twenty-three deterministic local regression cases pass (`python -m pytest tests -q`).
   They cover Minkowski KNN against scikit-learn without vote ties, deterministic tie
   handling, perceptron convergence/termination, sigmoid/tanh manual MLP gradients against autograd and large-magnitude tanh,
   CNN/VAE forward shapes, exact vector deletion/reinsertion and influence simulation/imports.
@@ -20,7 +20,8 @@ not a claim that every project runs on a fresh laptop.
   metadata were inspected. Demo video frames were sampled, not reviewed frame by frame.
 - All 167 audited personal source files outside archives retain their original SHA-256 hashes
   in OneDrive. No source originals were modified.
-- After history cleanup, 28 reachable commits and 345 unique blobs across `main` and
+- At the initial cleanup verification snapshot (before subsequent documentation/review
+  repair commits), 28 reachable commits and 345 unique blobs across `main` and
   the reorganization branch were independently checked against privately identified
   identifiers and credential literals: no matches remained. Historical notebooks were
   checked for outputs/attachments, and historical filenames for identifier patterns.
@@ -62,3 +63,20 @@ results were not rerun or silently relabeled as results from the repaired code.
   are not an untouched final holdout. Keep that limitation visible.
 - Credentials that appeared in history must be revoked/replaced by their owner. Cleanup
   of branch history does not remove hosting caches, old PR refs or other people's copies.
+
+## Second review follow-up
+
+- Entity Matching experiment data location is configured with ENTITY_MATCHING_DATA_DIR,
+  replacing the original personal absolute path. Local IR example paths are relative.
+- Influence EDA imports the actual pipeline module. Its module references are checked.
+- Active Learning experiment_lab now adds its project parent to sys.path. A synthetic
+  configuration/--help smoke test checks direct script execution from an unrelated cwd;
+  it does not imply the excluded course configuration/data are available.
+- FGSM clipping is checked against valid normalized channel bounds and its perturbation
+  budget; epsilon units are preserved. Historical unclipped results are not rerun.
+- Sentiment RNN best-checkpoint selection on test accuracy is explicitly documented as
+  a non-independent evaluation. No validation split was invented or historical number changed.
+
+These regression cases do not establish correctness of every algorithm or rule out data
+leakage in full CV/training pipelines. In particular, excluding known pairs from the final
+entity-matching output alone does not prove that cross-validation is free of leakage.

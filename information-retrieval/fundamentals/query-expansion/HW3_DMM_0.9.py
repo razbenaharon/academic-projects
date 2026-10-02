@@ -71,7 +71,7 @@ def combine_with_query_model(p_w_Q, p_w_MF, lam):
 # --------------------------
 # Main DMM Execution
 
-#cf_dict, total_terms_corpus = parse_collection_stats("C:/Users/User/Desktop/IR3/gov2_collection_stats.csv")
+#cf_dict, total_terms_corpus = parse_collection_stats("./gov2_collection_stats.csv")
 queries_tfs, queries_len = parse_documents_or_queries("q_stemmed.tsv")
 
 cf_dict, total_terms_corpus = parse_collection_stats("/data/HW3/gov2_collection_stats.csv")
@@ -84,7 +84,7 @@ for qid, q_tf in queries_tfs.items():
     p_w_Q = {term: tf / total_q_len for term, tf in q_tf.items()}
 
     # Load feedback documents for this query
-   # docs_tfs, docs_len = parse_documents_or_queries(f"C:/Users/User/Desktop/IR3/feedback_docs/{qid}.tsv")
+   # docs_tfs, docs_len = parse_documents_or_queries(f"./feedback_docs/{qid}.tsv")
     docs_tfs, docs_len = parse_documents_or_queries(f"/home/student/HW3/feedback_docs/{qid}.tsv")
 
     # Compute V_F (distinct terms in feedback set)

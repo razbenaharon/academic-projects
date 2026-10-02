@@ -157,3 +157,76 @@ def test_vae_forward_shape():
         output, mu, logvar = model(torch.zeros(2, 3, 128, 128))
     assert tuple(output.shape) == (2, 3, 128, 128)
     assert tuple(mu.shape) == tuple(logvar.shape) == (2, 8)
+
+
+def test_fgsm_respects_normalized_bounds_and_budget():
+    import torch
+
+    m = load("deep-learning/adversarial-and-contrastive-learning/attacks.py")
+    mean = torch.tensor(m.SVHN_MEAN).reshape(1, 3, 1, 1)
+    std = torch.tensor(m.SVHN_STD).reshape(1, 3, 1, 1)
+    raw = torch.tensor([0., .5, 1.]).reshape(1, 1, 1, 3).expand(2, 3, 2, 3)
+    x = (raw - mean) / std
+    grad = torch.tensor([-1., 1., 1.]).reshape(1, 1, 1, 3).expand_as(x)
+    adv = m.fgsm_attack(x, .2, grad)
+    recovered = adv * std + mean
+    assert recovered.min() >= -1e-7 and recovered.max() <= 1 + 1e-7
+    assert (adv - x).abs().max() <= .2 + 1e-6
+    torch.testing.assert_close(m.fgsm_attack(x, 0., grad), x)
+    torch.testing.assert_close(m.fgsm_attack(x, .2, grad, clamp=False), x + .2 * grad.sign())
+
+
+@pytest.mark.parametrize("epsilon", [-.1, float("nan")])
+def test_fgsm_rejects_invalid_budget(epsilon):
+    import torch
+
+    m = load("deep-learning/adversarial-and-contrastive-learning/attacks.py")
+    with pytest.raises(ValueError, match="epsilon"):
+        m.fgsm_attack(torch.zeros(1, 3, 2, 2), epsilon, torch.ones(1, 3, 2, 2))
+
+
+def test_entity_matching_data_directory_from_environment(tmp_path, monkeypatch):
+    import pickle
+    import pandas as pd
+
+    monkeypatch.setenv("ENTITY_MATCHING_DATA_DIR", str(tmp_path))
+    for name, identifier in [("tableA.csv", 1), ("tableB.csv", 2)]:
+        pd.DataFrame({"id": [identifier], "title": ["Example!"], "manufacturer": ["Acme"]}).to_csv(tmp_path / name, index=False)
+    # This pickle is created by this test; no external pickle is loaded.
+    (tmp_path / "100_matches.pkl").write_bytes(pickle.dumps([(1, 2)]))
+    m = load("machine-learning/entity-matching/em_core.py")
+    a, b, known = m.load_tables()
+    assert a.iloc[0]["text"] == "example acme"
+    assert b.iloc[0]["id"] == 2 and known == {(1, 2)}
+
+
+def test_influence_eda_import_and_references():
+    import ast
+    import json
+
+    folder = ROOT / "ai-and-decision-making/recommendation-and-auctions/influence-maximization"
+    m = load(str((folder / "influence_maximization.py").relative_to(ROOT)))
+    doc = json.loads((folder / "eda.ipynb").read_text(encoding="utf-8"))
+    nodes = [n for c in doc["cells"] if c["cell_type"] == "code"
+             for n in ast.walk(ast.parse("".join(c["source"])))]
+    imports = [n.name for node in nodes if isinstance(node, ast.Import) for n in node.names if n.asname == "cs"]
+    assert imports == ["influence_maximization"]
+    refs = {n.attr for n in nodes if isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name) and n.value.id == "cs"}
+    assert all(hasattr(m, name) for name in refs)
+
+
+def test_active_learning_experiment_script_import_path(tmp_path):
+    import shutil
+    import subprocess
+    import sys
+
+    project = tmp_path / "active-learning"
+    (project / "experiments").mkdir(parents=True)
+    for rel in ["utils.py", "experiments/experiment_lab.py"]:
+        shutil.copyfile(ROOT / "machine-learning/active-learning" / rel, project / rel)
+    # Minimal synthetic config for import/--help only; no oracle or data evaluation.
+    (project / "constants.yaml").write_text("max_labeled: 5\nmax_runtime_sec: 1\nseeds: [1]\n")
+    result = subprocess.run([sys.executable, str(project / "experiments/experiment_lab.py"), "--help"],
+                            cwd=tmp_path, capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert "usage:" in result.stdout.lower()
