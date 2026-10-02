@@ -20,6 +20,10 @@ not a claim that every project runs on a fresh laptop.
   metadata were inspected. Demo video frames were sampled, not reviewed frame by frame.
 - All 167 audited personal source files outside archives retain their original SHA-256 hashes
   in OneDrive. No source originals were modified.
+- After history cleanup, 28 reachable commits and 345 unique blobs across `main` and
+  the reorganization branch were independently checked against privately identified
+  identifiers and credential literals: no matches remained. Historical notebooks were
+  checked for outputs/attachments, and historical filenames for identifier patterns.
 
 Run `python scripts/check_publication.py` after staging changes. It inspects tracked text,
 notebook structure, PDF text and PPTX XML and reports paths/reasons without revealing matches.
