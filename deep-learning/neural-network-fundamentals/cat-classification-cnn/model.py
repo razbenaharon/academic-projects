@@ -1,3 +1,5 @@
+import torch.nn as nn
+
 class CompactCatCNN_v2(nn.Module):
     """CompactCatCNN_v2 - 2.36M parameters
 
@@ -29,11 +31,3 @@ class CompactCatCNN_v2(nn.Module):
 
     def forward(self, x):
         return self.fc(self.global_avg_pool(self.conv4(self.conv3(self.conv2(self.conv1(x))))))
-
-# Create model and check parameters
-temp_model = CompactCatCNN_v2(num_classes=10)
-num_params = sum(p.numel() for p in temp_model.parameters())
-
-print(f"Model: CompactCatCNN_v2")
-print(f"Parameters: {num_params:,}")
-print(f"Size: {num_params * 4 / 1024 / 1024:.2f} MB")

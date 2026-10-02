@@ -20,8 +20,7 @@ class KnnClassifier:
         self.k = k
         self.p = p
 
-        # TODO - Place your student IDs here. Single submitters please use a tuple like so: self.ids = (000000000,)
-        self.ids = (000000000, 000000000)
+        self.ids = ()  # Submission identifiers removed from public copy.
 
         # Save X and y
         self.trainX = None
@@ -52,71 +51,32 @@ class KnnClassifier:
         :return: A 1-dimensional numpy array of m rows. Should be of datatype np.uint8.
         """
 
+        if self.trainX is None:
+            raise ValueError("Call fit before predict")
+        if not 1 <= self.k <= len(self.trainX):
+            raise ValueError("k must be between 1 and the training sample count")
+        if self.p <= 0 or not np.isfinite(self.p):
+            raise ValueError("p must be finite and positive")
         predictions = []
+        # Absolute differences are required for Minkowski distance, including p=1.
+        for sample in np.asarray(X):
+            distances = np.sum(np.abs(self.trainX - sample) ** self.p, axis=1) ** (1 / self.p)
+            # Resolve equidistant neighbors by label, then original row order.
+            order = np.lexsort((np.arange(len(distances)), self.trainY, distances))[:self.k]
+            labels, counts = np.unique(self.trainY[order], return_counts=True)
+            tied = labels[counts == counts.max()]
+            # Majority ties: nearest supporting neighbor, then smallest label.
+            label = min(tied, key=lambda label: (distances[order][self.trainY[order] == label].min(), label))
+            predictions.append(label)
+        return np.asarray(predictions, dtype=np.uint8)
 
-        trainX_expanded = self.trainX[:, np.newaxis, :]
-
-        testX_expanded = X[np.newaxis, :, :]
-
-        squared_diff = (trainX_expanded - testX_expanded) ** self.p
-
-        sum_squared_diff = np.sum(squared_diff, axis=2)
-
-        distances = np.power(sum_squared_diff, 1 / self.p)
-
-        for i in range(distances.shape[1]):  # Loop over each test sample
-            # Get the indices of the sorted distances (ascending order)
-            sorted_indices = np.argsort(distances[:, i])  # Indices of the sorted distances
-            sorted_distances = distances[sorted_indices, i]  # Sorted distances for the test point
-            sorted_labels = self.trainY[sorted_indices]  # Corresponding labels of the sorted neighbors
-
-            if (self.k<distances.shape[1]):
-                if (sorted_distances[self.k])==(sorted_distances[self.k+1]):
-                    k_label= sorted_labels[self.k]
-                    kplus_label= sorted_labels[self.k+1]
-                    if kplus_label < k_label:
-                        sorted_labels[self.k] = sorted_labels[self.k + 1]
-
-
-            nearest_labels = sorted_labels[:self.k]
-            nearest_distances = sorted_distances[:self.k]
-
-            count = Counter(nearest_labels)
-
-            if len(count) == 1:
-                predicted_label = list(count.keys())[0]
-            else:
-                max_count = max(count.values())
-                tied_classes = [label for label, c in count.items() if c == max_count]
-
-                if len(tied_classes) > 1:
-                    nearest_label = nearest_labels[0]
-                    nearest_distance = nearest_distances[0]
-
-
-                    for label in tied_classes:
-                        tied_label_indices = np.where(np.array(nearest_labels) == label)[0]
-                        tied_distances = np.array(nearest_distances)[tied_label_indices]
-
-                        if min(tied_distances) < nearest_distance:
-                            nearest_label = label
-                            nearest_distance = min(tied_distances)
-
-                    predicted_label = nearest_label
-                else:
-                    predicted_label = tied_classes[0]
-
-
-            predictions.append(predicted_label)
-
-        return np.array(predictions, dtype=np.uint8)
 
 
 
 def main():
 
     print("*" * 20)
-    print("Started HW1_000000000_000000000.py")
+    print("Started KNN classification")
     # Parsing script arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('csv', type=str, help='Input csv file path')

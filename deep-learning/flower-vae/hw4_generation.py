@@ -36,7 +36,11 @@ def reproduce_hw4(model_path='hw4_model.pkl',
     # Load the model
     print("Loading model...")
     model = VAE(latent_dim=latent_dim, image_channels=3)
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    state = torch.load(model_path, map_location=device, weights_only=True)
+    checkpoint_dim = state["fc_mu.weight"].shape[0]
+    if checkpoint_dim != latent_dim:
+        raise ValueError(f"Checkpoint latent dimension is {checkpoint_dim}; pass latent_dim={checkpoint_dim}")
+    model.load_state_dict(state)
     model = model.to(device)
     model.eval()
     print("Model loaded successfully!")
@@ -99,7 +103,7 @@ def reproduce_hw4(model_path='hw4_model.pkl',
             for i in range(10):
                 # Add controlled noise to create variation
                 noise = np.random.randn(latent_dim) * 0.3
-                z = torch.FloatTensor(base_latent + noise).unsqueeze(0).to(device)
+                z = torch.as_tensor(base_latent + noise, dtype=torch.float32, device=device).reshape(1, latent_dim)
                 
                 # Generate image
                 generated = model.decode(z).cpu()

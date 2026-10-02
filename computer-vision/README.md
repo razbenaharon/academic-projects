@@ -1,4 +1,3 @@
 # Computer Vision
 
-## Projects
-* **[Surgical Tool Detection](./surgical-tool-detection/)**: Deep learning models for detecting surgical tools in medical videos/images.
+- **[Surgical tool detection](surgical-tool-detection/)**: Object detection, pseudo-labeling and in-/out-of-distribution comparisons.

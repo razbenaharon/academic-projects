@@ -1,15 +1,11 @@
 # Machine Learning
 
-This directory contains projects focusing on classical machine learning algorithms, both supervised and unsupervised. 
+- **[Active learning](active-learning/)**: Label acquisition under a budget; rare-class learning.
+- **[Entity matching](entity-matching/)**: Candidate generation and a heavily regularized pair ranker with few positives.
+- **[KNN](supervised-learning/knn/)**: Minkowski distances, deterministic ties and synthetic experiments across k/sample sizes.
+- **[Perceptron](supervised-learning/perceptron/)**: Multiclass linear updates with a bounded training loop.
+- **[Booking quality classification](supervised-learning/booking-quality-classification/)**: Spark features, Random Forest and TrainValidationSplit; pretrained sentiment enrichment.
+- **[NumPy K-means](unsupervised-learning/numpy-kmeans/)**: Clustering and feature scaling on London bicycle data.
+- **[Coupon recommendation](recommendation-and-online-learning/coupon-recommendation/)**: Sparse least squares, regularization, SVD and online UCB under a budget.
 
-## Projects
-* **[Active Learning](./active-learning/)**: Implementation of active learning strategies.
-* **[Entity Matching](./entity-matching/)**: Data integration and entity resolution.
-* **[Supervised Learning](./supervised-learning/)**:
-  * **KNN**: K-Nearest Neighbors implemented from scratch using NumPy.
-  * **Perceptron**: Perceptron classifier from scratch.
-  * **Booking Quality Classification**: Random Forest and feature engineering for booking ratings (Spark NLP).
-* **[Unsupervised Learning](./unsupervised-learning/)**:
-  * **K-Means**: K-Means clustering implemented purely in NumPy.
-* **[Recommendation & Online Learning](./recommendation-and-online-learning/)**:
-  * **Coupon Recommendation**: Sparse least squares, UCB, and online learning under a budget constraint.
+Related foundations: [statistical modeling and bootstrap](../statistics/hotel-booking-analysis/) and [Spark KMeans/PCA/SVD](../engineering-foundations/data-engineering/spark-household-segmentation/).

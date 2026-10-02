@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+
+
+<body style="background-color: #4CD4D4 ;text-align:center">
+
+<h1 style="text-align:center; color: black"> Welcome to the Stocks Website</h1>
+
+
+<br>
+<br>
+
+<a href="{% url 'index' %}">Home</a><br>
+<a href="{% url 'QueryResults' %}">Query Results</a> <br>
+<a href="{% url 'AddTransaction' %}">Add Transaction</a><br>
+<a href="{% url 'BuyStocks' %}">Buy Stocks</a>
+
+<br>
+<br>
+
+<img src="../static/stocks.jpg" alt="media" style="width: 500px;height:350px;">
+
+</body>
+</html>

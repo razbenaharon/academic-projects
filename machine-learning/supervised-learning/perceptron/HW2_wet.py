@@ -8,10 +8,14 @@ import pandas as pd
 
 
 class PerceptronClassifier:
-    def __init__(self):
+    def __init__(self, max_epochs=1000):
 
+        if max_epochs < 1:
+            raise ValueError("max_epochs must be positive")
+        self.max_epochs = max_epochs
+        self.converged_ = False
         self.weights = None
-        self.ids = (000000000, 000000000)
+        self.ids = ()
 
     def fit(self, X: np.ndarray, y: np.ndarray):
         """
@@ -31,7 +35,7 @@ class PerceptronClassifier:
         K = np.max(y)+1
         self.weights = np.zeros((K, d), dtype=np.float32)
 
-        while True:
+        for epoch in range(self.max_epochs):
             updated = False
 
             for i in range(m):
@@ -44,7 +48,9 @@ class PerceptronClassifier:
                     self.weights[y[i]] += x_t
                     updated = True
 
+            self.n_epochs_ = epoch + 1
             if not updated:
+                self.converged_ = True
                 break
 
     def predict(self, X: np.ndarray) -> np.ndarray:
