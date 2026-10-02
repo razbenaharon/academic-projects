@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy Stocks</title>
+        <style>
+        .red-text {
+            color: red;
+        }
+    </style>
+
+</head>
+<body style="background-color: #4CD4D4 ;text-align:center">
+
+<h1>Buy Stocks</h1>
+
+<br>
+<br>
+<a href="{% url 'index' %}">Home</a><br>
+<a href="{% url 'QueryResults' %}">Query Results</a> <br>
+<a href="{% url 'AddTransaction' %}">Add Transaction</a><br>
+<a href="{% url 'BuyStocks' %}">Buy Stocks</a>
+<br>
+<br>
+
+<form method = "POST">
+    {% csrf_token %}
+
+ID: <input type="text" name="ID" required><br>
+Company: <input type="text" name="Company" required><br>
+Quantity: <input type="text" name="Quantity" required><br>
+<button type="submit" value="Send"> Submit</button>
+</form>
+
+
+{% if message %}
+    <p class="red-text">{{ message }}</p>
+{% endif %}
+
+<h1>Last 10 Stocks Buys: </h1>
+<table border="1" style="width: 100%">
+
+    <th>Date</th>
+    <th>Investor ID</th>
+    <th>Symbol</th>
+    <th>Quantity</th>
+   {% for content in sql_res5 %}
+        <tr>
+        <td>{{ content.tDate }}</td>
+        <td>{{ content.ID }}</td>
+        <td>{{ content.Symbol }}</td>
+        <td>{{ content.BQuantity }}</td>
+        </tr>
+      {% endfor %}
+</table>
+
+</body>
+</html>

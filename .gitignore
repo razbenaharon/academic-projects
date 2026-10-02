@@ -1,33 +1,46 @@
-# Python
+# Local environments, credentials and editor state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.venv/
+venv/
+env/
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ipynb_checkpoints/
-
-# Environments
-.env
-.venv/
-venv/
-env/
-
-# Generated indexes and model artifacts.
-# wikipedia-hybrid-retrieval/artifacts/ is ~250 MB of prebuilt index tensors;
-# rebuild with `python scripts/build_index.py` rather than committing them.
-wikipedia-hybrid-retrieval/artifacts/
-*.npy
-*.pt
-*.pth
-
-# FoodFlow run outputs (the agents rewrite these on every run)
-foodflow/results/*
-!foodflow/results/.gitkeep
-foodflow/data/current_inventory.json
-foodflow/data/expiring_ingredients.json
-foodflow/data/recent_expiring_ingredients.json
-
-# OS / editor
 .DS_Store
 .idea/
 .vscode/
+
+# Private datasets and generated artifacts; curated demo data allowlisted below.
+*.csv
+*.tsv
+*.parquet
+*.npy
+*.npz
+*.pt
+*.pth
+*.pkl
+*.h5
+*.model
+*.db
+*.sqlite3
+*.zip
+information-retrieval/wikipedia-hybrid-retrieval/artifacts/
+ai-and-decision-making/foodflow/results/*
+!ai-and-decision-making/foodflow/results/.gitkeep
+ai-and-decision-making/foodflow/data/current_inventory.json
+ai-and-decision-making/foodflow/data/expiring_ingredients.json
+ai-and-decision-making/foodflow/data/recent_expiring_ingredients.json
+deep-learning/flower-vae/generated_outputs/
+
+# Public venues, historical fixtures and enrichment used by existing demos.
+!ai-and-decision-making/foodflow/agent/restaurant_agent/nearby_restaurants.csv
+!ai-and-decision-making/foodflow/agent/soup_kitchen_finder/nearby_soup_kitchens.csv
+!engineering-foundations/data-engineering/match-point/data/Match_Schedule_All_Leagues.csv
+!engineering-foundations/data-engineering/match-point/data/Stadium_LLM_Enrichment.csv

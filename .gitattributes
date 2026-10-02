@@ -1,0 +1,15 @@
+* text=auto
+*.py text eol=lf
+*.ipynb text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.sql text eol=lf
+*.java text eol=lf
+*.c text eol=lf
+*.patch text eol=lf
+*.pdf binary
+*.pptx binary
+*.mp4 binary
+*.jpg binary
+*.png binary

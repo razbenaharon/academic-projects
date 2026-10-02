@@ -1,0 +1,209 @@
+diff --git a/Makefile b/Makefile
+index 34c2c3a..3d66bad 100644
+--- a/Makefile
++++ b/Makefile
+@@ -180,6 +180,7 @@ UPROGS=\
+ 	_stressfs\
+ 	_usertests\
+ 	_wc\
++	_lsproc\
+ 	_zombie\
+ 	_testwait
+ 
+@@ -250,7 +251,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
+ 
+ EXTRA=\
+ 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
+-	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
++	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c lsproc.c zombie.c\
+ 	printf.c umalloc.c\
+ 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
+ 	.gdbinit.tmpl gdbutil\
+diff --git a/defs.h b/defs.h
+index 82fb982..96fb705 100644
+--- a/defs.h
++++ b/defs.h
+@@ -120,6 +120,7 @@ void            userinit(void);
+ int             wait(void);
+ void            wakeup(void*);
+ void            yield(void);
++int		lsproc(void);
+ 
+ // swtch.S
+ void            swtch(struct context**, struct context*);
+diff --git a/lsproc.c b/lsproc.c
+new file mode 100644
+index 0000000..91084da
+--- /dev/null
++++ b/lsproc.c
+@@ -0,0 +1,12 @@
++#include "types.h"
++#include "stat.h"
++#include "user.h"
++#include "fcntl.h"
++
++int 
++main (int argc, char *argv[])
++{
++	lsproc();
++
++	exit();
++}
+\ No newline at end of file
+diff --git a/proc.c b/proc.c
+index 806b1b1..ca42d67 100644
+--- a/proc.c
++++ b/proc.c
+@@ -532,3 +532,27 @@ procdump(void)
+     cprintf("\n");
+   }
+ }
++
++int 
++lsproc()
++{
++  struct proc *p;
++
++	sti();
++        
++  acquire(&ptable.lock);
++
++	cprintf("name pid state address\n");
++	
++  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
++        if(p->state == SLEEPING)
++		cprintf("%s \t  %d  \t  %s \t %p  \n", p->name, p->pid, p->state == SLEEPING ? "SLEEPING" : p->state == RUNNING ? "RUNNING" : "RUNNABLE", p->pgdir);
++	else if (p->state == RUNNING)
++		cprintf("%s \t  %d  \t  %s \t %p  \n", p->name, p->pid, p->state == SLEEPING ? "SLEEPING" : p->state == RUNNING ? "RUNNING" : "RUNNABLE", p->pgdir);
++	else if (p->state == RUNNABLE)
++		cprintf("%s \t  %d  \t  %s \t %p  \n", p->name, p->pid, p->state == SLEEPING ? "SLEEPING" : p->state == RUNNING ? "RUNNING" : "RUNNABLE", p->pgdir);
++
++  }
++  release(&ptable.lock);
++  return 22;
++}
+\ No newline at end of file
+diff --git a/syscall.c b/syscall.c
+index d2218c3..5334bee 100644
+--- a/syscall.c
++++ b/syscall.c
+@@ -6,6 +6,7 @@
+ #include "proc.h"
+ #include "x86.h"
+ #include "syscall.h"
++#include "spinlock.h"
+ 
+ // User code makes a system call with INT T_SYSCALL.
+ // System call number in %eax.
+@@ -14,10 +15,17 @@
+ // to a saved program counter, and then the first argument.
+ 
+ // Fetch the int at addr from the current process.
++#define NPROC 64
++
++extern struct{
++        struct spinlock lock;
++        struct proc proc[NPROC];
++} ptable;
++
+ int
+ fetchint(uint addr, int *ip)
+ {
+-  struct proc *curproc = myproc();
++                                 struct proc *curproc = myproc();
+ 
+   if(addr >= curproc->sz || addr+4 > curproc->sz)
+     return -1;
+@@ -60,10 +68,10 @@ argptr(int n, char **pp, int size)
+ {
+   int i;
+   struct proc *curproc = myproc();
+- 
++
+   if(argint(n, &i) < 0)
+     return -1;
+-  if(size < 0 || (uint)i >= curproc->sz || (uint)i+size > curproc->sz)
++                                                         if(size < 0 || (uint)i >= curproc->sz || (uint)i+size > curproc->sz)
+     return -1;
+   *pp = (char*)i;
+   return 0;
+@@ -103,6 +111,7 @@ extern int sys_unlink(void);
+ extern int sys_wait(void);
+ extern int sys_write(void);
+ extern int sys_uptime(void);
++extern int sys_lsproc(void);
+ extern int sys_halt(void);
+ static int (*syscalls[])(void) = {
+ [SYS_fork]    sys_fork,
+@@ -126,7 +135,8 @@ static int (*syscalls[])(void) = {
+ [SYS_link]    sys_link,
+ [SYS_mkdir]   sys_mkdir,
+ [SYS_close]   sys_close,
+-[SYS_halt]    sys_halt
++[SYS_halt]    sys_halt,
++[SYS_lsproc]  sys_lsproc,
+ };
+ 
+ void
+@@ -144,3 +154,4 @@ syscall(void)
+     curproc->tf->eax = -1;
+   }
+ }
++                                                       
+diff --git a/syscall.h b/syscall.h
+index 1dd7b9b..ed522d7 100644
+--- a/syscall.h
++++ b/syscall.h
+@@ -21,3 +21,4 @@
+ #define SYS_mkdir  20
+ #define SYS_close  21
+ #define SYS_halt   50
++#define SYS_lsproc 22
+diff --git a/sysproc.c b/sysproc.c
+index 4fc95e9..c62437a 100644
+--- a/sysproc.c
++++ b/sysproc.c
+@@ -97,4 +97,10 @@ sys_halt(void)
+   return 0;
+ }
+ 
++int
++sys_lsproc(void)
++{
++  return lsproc();
++}
++
+ 
+diff --git a/types.h b/types.h
+index e4adf64..f8ae272 100644
+--- a/types.h
++++ b/types.h
+@@ -1,4 +1,4 @@
+ typedef unsigned int   uint;
+ typedef unsigned short ushort;
+ typedef unsigned char  uchar;
+-typedef uint pde_t;
++typedef uint pde_t;
+\ No newline at end of file
+diff --git a/user.h b/user.h
+index 14f64db..0290961 100644
+--- a/user.h
++++ b/user.h
+@@ -24,6 +24,7 @@ char* sbrk(int);
+ int sleep(int);
+ int uptime(void);
+ int halt(void);
++int lsproc(void);
+ 
+ // ulib.c
+ int stat(const char*, struct stat*);
+diff --git a/usys.S b/usys.S
+index 0d4eaed..9bcb351 100644
+--- a/usys.S
++++ b/usys.S
+@@ -30,3 +30,5 @@ SYSCALL(sbrk)
+ SYSCALL(sleep)
+ SYSCALL(uptime)
+ SYSCALL(halt)
++SYSCALL(lsproc)
++
