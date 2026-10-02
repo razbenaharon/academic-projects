@@ -5,9 +5,9 @@ not a claim that every project runs on a fresh laptop.
 
 ## Completed checks
 
-- Thirteen deterministic local regression cases pass (`python -m pytest tests -q`).
+- Seventeen deterministic local regression cases pass (`python -m pytest tests -q`).
   They cover Minkowski KNN against scikit-learn without vote ties, deterministic tie
-  handling, perceptron convergence/termination, manual MLP gradients against autograd,
+  handling, perceptron convergence/termination, sigmoid/tanh manual MLP gradients against autograd and large-magnitude tanh,
   CNN/VAE forward shapes, exact vector deletion/reinsertion and influence simulation/imports.
 - Python files and ordinary Python notebook cells receive AST syntax checks. Notebook
   magic cells are treated separately; Databricks SQL/magic cells are not parsed as Python.
@@ -33,9 +33,10 @@ contain no sensitive information; imported outputs are removed and retained medi
 ## Public-copy repairs
 
 - KNN: absolute Minkowski differences, valid neighbor boundaries and documented ties.
-- Perceptron: bounded epochs with exposed convergence state.
+- Perceptron: bounded epochs with exposed/returned convergence state, reset on refit.
 - Manual MLP: use the instance activation instead of an accidental global variable;
-  extract reusable code and verify gradients independently.
+  select the matching sigmoid/tanh derivative, reject unsupported hidden activations,
+  extract reusable code and verify both gradients independently.
 - Cat CNN: restore the missing `nn` import in the standalone class and use zero notebook
   loader workers on Windows.
 - VAE: align generation defaults with training, validate checkpoint latent size, load only

@@ -49,7 +49,7 @@ def test_knn_vote_tie_does_not_choose_a_minority_class():
 def test_perceptron_terminates_on_inseparable_data():
     cls = load("machine-learning/supervised-learning/perceptron/HW2_wet.py").PerceptronClassifier
     model = cls(max_epochs=5)
-    model.fit(np.ones((2, 1)), np.array([0, 1]))
+    assert model.fit(np.ones((2, 1)), np.array([0, 1])) is False
     assert model.n_epochs_ == 5
     assert not model.converged_
 
@@ -59,26 +59,51 @@ def test_perceptron_learns_separable_data():
     x = np.array([[-2.], [-1.], [1.], [2.]])
     y = np.array([0, 0, 1, 1])
     model = cls()
-    model.fit(x, y)
+    assert model.fit(x, y) is True
     assert model.converged_
     np.testing.assert_array_equal(model.predict(x), y)
 
 
-def test_manual_mlp_gradient_matches_autograd():
+@pytest.mark.parametrize("activation", ["sigmoid", "tanh"])
+def test_manual_mlp_gradient_matches_autograd(activation):
     import torch
 
     m = load("deep-learning/neural-network-fundamentals/manual-mlp/model.py")
     torch.manual_seed(8)
-    net = m.FullyConnectedNetwork(3, 2, 4, m.sigmoid, lr=0.1)
+    net = m.FullyConnectedNetwork(3, 2, 4, getattr(m, activation), lr=0.1)
     x = torch.randn(5, 3)
     y = torch.tensor([0, 1, 1, 0, 1])
     original = [a.clone() for a in (net.W1, net.b1, net.W2, net.b2)]
     w1, b1, w2, b2 = [a.clone().requires_grad_() for a in original]
-    logits = torch.sigmoid(x @ w1 + b1) @ w2 + b2
+    logits = getattr(torch, activation)(x @ w1 + b1) @ w2 + b2
     torch.nn.functional.cross_entropy(logits, y).backward()
     net.backward(x, y, net.forward(x))
     for old, new, reference in zip(original, (net.W1, net.b1, net.W2, net.b2), (w1, b1, w2, b2)):
         torch.testing.assert_close((old - new) / net.lr, reference.grad, atol=2e-6, rtol=2e-5)
+
+
+def test_manual_mlp_rejects_unknown_activation():
+    m = load("deep-learning/neural-network-fundamentals/manual-mlp/model.py")
+    with pytest.raises(ValueError, match="Hidden activation"):
+        m.FullyConnectedNetwork(3, 2, 4, lambda x: x)
+
+
+def test_manual_tanh_is_finite_at_large_magnitudes():
+    import torch
+
+    m = load("deep-learning/neural-network-fundamentals/manual-mlp/model.py")
+    x = torch.tensor([-1000., 0., 1000.])
+    torch.testing.assert_close(m.tanh(x), torch.tanh(x))
+    torch.testing.assert_close(m.d_tanh(x), torch.tensor([0., 1., 0.]))
+
+
+def test_perceptron_refit_resets_convergence_state():
+    cls = load("machine-learning/supervised-learning/perceptron/HW2_wet.py").PerceptronClassifier
+    model = cls(max_epochs=5)
+    assert model.fit(np.array([[-1.], [1.]]), np.array([0, 1])) is True
+    assert model.fit(np.ones((2, 1)), np.array([0, 1])) is False
+    assert not model.converged_
+    assert model.n_epochs_ == 5
 
 
 def test_cat_cnn_forward_shape():

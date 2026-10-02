@@ -1,4 +1,4 @@
-"""Manual sigmoid MLP and gradients, extracted from the original coursework.
+"""Manual sigmoid/tanh MLP and gradients, extracted from the original coursework.
 Uses PyTorch tensor operations; no autograd in training.
 """
 import torch
@@ -7,7 +7,8 @@ def sigmoid(x):
     return 1 / (1 + torch.exp(-x))
 
 def tanh(x):
-    return torch.div(torch.exp(x) - torch.exp(-x), torch.exp(x) + torch.exp(-x))
+    # Avoid inf/inf from the direct exponential quotient at large magnitudes.
+    return 2 * sigmoid(2 * x) - 1
 
 
 def softmax(x):
@@ -20,7 +21,7 @@ def d_sigmoid(x):
 
 
 def d_tanh(x):
-    t = torch.div(torch.exp(x) - torch.exp(-x), torch.exp(x) + torch.exp(-x))
+    t = tanh(x)
     return 1 - t**2
 
 
@@ -55,6 +56,12 @@ class FullyConnectedNetwork:
 
         # activation function
         self.activation_func = activiation_func
+        if activiation_func is sigmoid:
+            self.d_activation_func = d_sigmoid
+        elif activiation_func is tanh:
+            self.d_activation_func = d_tanh
+        else:
+            raise ValueError("Hidden activation must be this module's sigmoid or tanh")
         limit1 = (6 / (input_size + hidden_size1))**0.5
         self.W1 = torch.empty(self.input_size, self.hidden_size1).uniform_(-limit1, limit1)
         self.b1 = torch.zeros(self.hidden_size1)
@@ -86,7 +93,7 @@ class FullyConnectedNetwork:
         dW2 = self.A1.T @ dZ2
         db2 = torch.sum(dZ2, dim=0)
         dA1 = dZ2 @ self.W2.T
-        d_act = d_sigmoid(self.Z1)
+        d_act = self.d_activation_func(self.Z1)
         dZ1 = dA1 * d_act
         dW1 = x.T @ dZ1
         db1 = torch.sum(dZ1, dim=0)

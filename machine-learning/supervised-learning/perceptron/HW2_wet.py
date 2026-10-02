@@ -17,13 +17,15 @@ class PerceptronClassifier:
         self.weights = None
         self.ids = ()
 
-    def fit(self, X: np.ndarray, y: np.ndarray):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> bool:
         """
         This method trains a multiclass perceptron classifier on a given training set X with label set y.
         :param X: A 2-dimensional numpy array of m rows and d columns. It is guaranteed that m >= 1 and d >= 1.
         Array datatype is guaranteed to be np.float32.
         :param y: A 1-dimensional numpy array of m rows. it is guaranteed to match X's rows in length (|m_x| == |m_y|).
         Array datatype is guaranteed to be np.uint8.
+        Returns whether a complete epoch made no updates within max_epochs.
+        False is not proof that the dataset is linearly inseparable.
         """
         """
         This method trains a multiclass perceptron classifier on a given training set X with label set y.
@@ -34,6 +36,8 @@ class PerceptronClassifier:
         m, d = X.shape
         K = np.max(y)+1
         self.weights = np.zeros((K, d), dtype=np.float32)
+        self.converged_ = False
+        self.n_epochs_ = 0
 
         for epoch in range(self.max_epochs):
             updated = False
@@ -52,6 +56,8 @@ class PerceptronClassifier:
             if not updated:
                 self.converged_ = True
                 break
+
+        return self.converged_
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -95,7 +101,8 @@ if __name__ == "__main__":
     y = pd.factorize(data[data.columns[-1]])[0].astype(np.uint8)
 
     print("Fitting...")
-    is_separable = model.fit(X, y)
+    converged = model.fit(X, y)
+    print(f"Converged: {converged}; epochs: {model.n_epochs_}")
     print("Done")
     y_pred = model.predict(X)
     print("Done")
