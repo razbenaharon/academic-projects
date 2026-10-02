@@ -10,7 +10,7 @@ Rank Airbnb listings for football tourists, where "best" means *near the stadium
 - **[Watch / download the user journey video](assets/users-journey.mp4)** — the original 79-second, 1080p walkthrough, including audio.
 - **[Browse the saved intermediate outputs](data/)** — fixture schedule, scraped stadium details and generated stadium guides. These are historical exports, not live feeds; the raw course Airbnb dataset is not included.
 
-[![MatchPoint user journey](assets/demo-preview.jpg)](assets/users-journey.mp4)
+[![MatchPoint map showing the stadium and recommended accommodation](assets/demo-preview.jpg)](assets/users-journey.mp4)
 
 This is a **historical course demonstration**, not a live travel service. The HTML contains 10,172 fixtures dated **2023-08-04 to 2026-01-21**, with 327,854 saved accommodation recommendations across 4,059 fixture groups. Prices, availability and generated stadium guides are not refreshed. The booking dialog is simulated: no reservation is made and no email is sent.
 
