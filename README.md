@@ -52,7 +52,7 @@ Most of these depend on course-provided data that cannot be redistributed, and s
 | surgical-tool-detection | Inference runs with the release weights; training needs the course data. See [`REPRODUCE.md`](surgical-tool-detection/REPRODUCE.md) |
 | wikipedia-hybrid-retrieval | Needs the Wikipedia corpus; `scripts/build_index.py` rebuilds the ~250 MB index |
 | map-optimization-ir | Results and method only — the Indri index and driver scripts were not part of the submission. `analyze_runs.py` runs on the committed run files |
-| match-point | No — Databricks `/dbfs` paths and a Llama serving endpoint |
+| match-point | Standalone HTML demo runs in a browser; rebuilding needs Databricks `/dbfs` paths, a Llama serving endpoint and course data |
 | distributed-database-spark | No — Databricks mounts and a course Kafka topic |
 | foodflow | With Azure OpenAI and Qdrant credentials in the environment |
 

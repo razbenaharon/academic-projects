@@ -4,6 +4,18 @@
 
 Rank Airbnb listings for football tourists, where "best" means *near the stadium on match day* rather than the generic price/quality trade-off booking platforms optimise for.
 
+## Try the demo
+
+- **[Download the standalone HTML](MatchPoint_App.html)** using GitHub's **Download raw file** button, then open it in a browser. No Databricks account, credentials or local server are needed. An internet connection is needed for Leaflet, map tiles and other CDN assets.
+- **[Watch / download the user journey video](assets/users-journey.mp4)** — the original 79-second, 1080p walkthrough, including audio.
+- **[Browse the saved intermediate outputs](data/)** — fixture schedule, scraped stadium details and generated stadium guides. These are historical exports, not live feeds; the raw course Airbnb dataset is not included.
+
+[![MatchPoint user journey](assets/demo-preview.jpg)](assets/users-journey.mp4)
+
+This is a **historical course demonstration**, not a live travel service. The HTML contains 10,172 fixtures dated **2023-08-04 to 2026-01-21**, with 327,854 saved accommodation recommendations across 4,059 fixture groups. Prices, availability and generated stadium guides are not refreshed. The booking dialog is simulated: no reservation is made and no email is sent.
+
+The standalone demo runs independently of the notebooks; rebuilding the pipeline still requires the original external services and course data described below.
+
 ---
 
 ## Problem
@@ -62,3 +74,18 @@ Migrated from a standalone repository during a portfolio cleanup:
 
 - `Final Project - MatchPoint.ipynb` → `matchpoint_analysis.ipynb` (spaces in filenames break tooling).
 - Databricks mirrors each `display()` result a second time inside vendor metadata. Removing that duplicate took the main notebook from 9.0 MB to 0.3 MB, which is the difference between GitHub rendering it and refusing to. All 32 cells and every meaningful output are intact.
+- On 2026-10-02, all three notebooks were compared with the final local submission: every code and Markdown cell matches. The missing HTML, original user journey video and three intermediate data exports were added.
+- The original HTML is 164,075,453 bytes. The committed version uses dictionary encoding for repeated recommendation values, reducing it to about 31.6 MB while preserving every recommendation, its order, scores and availability. `package_demo.py` checks all 327,854 records before writing; it also labels the historical data and simulated booking clearly. The video is copied without transcoding.
+- `.env`, course storage credentials, raw course datasets and submission PDFs containing student identifiers are not included in this public copy.
+
+To package a newly exported HTML without changing the original:
+
+```sh
+python package_demo.py /path/to/original/MatchPoint_App.html MatchPoint_App.html
+```
+
+## Useful next additions
+
+- A redacted project report and poster, with student identifiers and credentials removed.
+- A small synthetic input dataset and documented configuration for reproducing the pipeline outside the course Databricks environment.
+- A data refresh process with timestamps and validation for fixtures, accommodation availability and generated guides, before presenting the app as a current travel tool.
