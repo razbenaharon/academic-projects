@@ -31,3 +31,18 @@ foodflow/data/recent_expiring_ingredients.json
 .DS_Store
 .idea/
 .vscode/
+
+# Datasets and large files
+*.csv
+*.tsv
+*.parquet
+*.h5
+*.pkl
+*.model
+*.db
+*.sqlite3
+*.zip
+
+# Generated plots/documents (if not meant for version control)
+# *.png
+# *.pdf
